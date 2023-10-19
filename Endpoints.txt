@@ -1,0 +1,46 @@
+## Monitor Object for Postman:
+{
+    "modelName": "navinortesa",
+    "brand": "gonzallloneivan",
+    "isImported": true,
+    "stock": 1,
+    "weight": 0.3,
+    "price": 12.50,
+    "inches": 5,
+    "panelType": "dos"
+} 
+
+## Keyboard Object for Postman:
+{
+    "modelName": "navinortesalonica",
+    "brand": "gonzallloneivan",
+    "isImported": false,
+    "stock": 1,
+    "weight": 0.3,
+    "price": 12.50,
+    "keyQuantity": 5,
+    "isMechanical": true
+}
+
+## Mouse Object for Postman:
+{
+    "modelName": "navinortesalonicalo",
+    "brand": "gonzallloneivan",
+    "isImported": false,
+    "stock": 1,
+    "weight": 0.3,
+    "price": 12.50,
+    "dpi": 5.0,
+    "buttonQuantity": 120
+} 
+
+## Endpoints:
+GET http://localhost:8080/meyguer/details/{modelName}?flag=true // with the flag=true return the price in pesos if the model is imported, otherwise (not imported or no flag) return the price in dollars
+GET http://localhost:8080/meyguer/model/keyboard // return all model names of keyboards
+GET http://localhost:8080/meyguer/model/mouse // return all model names of mouse
+GET http://localhost:8080/meyguer/model/monitor // return all model names of monitor
+POST  http://localhost:8080/meyguer/save/monitor // create a product, expects the JSON specified above
+POST  http://localhost:8080/meyguer/save/keyboard // create a product, expects the JSON specified above
+POST  http://localhost:8080/meyguer/save/mouse  // create a product, expects the JSON specified above
+PUT http://localhost:8080/meyguer/sell/{modelName} // reduce the stock in 1 if possible, updating
+DELETE http://localhost:8080/meyguer/{modelName} // hard-delete a product if possible
