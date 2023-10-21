@@ -1,6 +1,7 @@
 package Meyguer.ChromaticLantern.Controller;
 
 import Meyguer.ChromaticLantern.Exceptions.*;
+import Meyguer.ChromaticLantern.Model.HardwareEntity;
 import Meyguer.ChromaticLantern.Model.Keyboard;
 import Meyguer.ChromaticLantern.Model.Monitor;
 import Meyguer.ChromaticLantern.Model.Mouse;
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("meyguer")
@@ -21,7 +23,22 @@ public class MainController {
     @GetMapping("/details/{modelName}")
     public ResponseEntity<Object> getById(@PathVariable("modelName") String modelName, @RequestParam(value="flag", required = false, defaultValue = "false") Boolean flag){
         try {
-            return new ResponseEntity<>(hardwareService.getDetails(modelName,flag), HttpStatus.OK);
+            Optional<HardwareEntity> he = hardwareService.getIndex(modelName);
+            if(he.isPresent()) {
+                switch (he.get().getType()) {
+                    case "monitor" -> {
+                        return new ResponseEntity<>(hardwareService.monitorDetails(he, flag), HttpStatus.OK);
+                    }
+                    case "mouse" -> {
+                        return new ResponseEntity<>(hardwareService.mouseDetails(he, flag), HttpStatus.OK);
+                    }
+                    case "keyboard" -> {
+                        return new ResponseEntity<>(hardwareService.keyboardDetails(he, flag), HttpStatus.OK);
+                    }
+                    default -> throw new ModelNotFoundException();
+                }
+            }
+            throw new ModelNotFoundException();
         }catch(ModelNotFoundException e){
             return new ResponseEntity<>("Model not found", HttpStatus.BAD_REQUEST);
         } catch (IOException e) {

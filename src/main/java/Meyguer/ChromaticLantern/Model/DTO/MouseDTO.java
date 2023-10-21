@@ -10,6 +10,8 @@ public class MouseDTO {
     private Double dpi;
     private Integer buttonQuantity;
 
+    public MouseDTO() {
+    }
 
     public MouseDTO(String modelName, String brand, Boolean isImported, Integer stock, Double weight, Double price, Double dpi, Integer buttonQuantity) {
         this.modelName = modelName;

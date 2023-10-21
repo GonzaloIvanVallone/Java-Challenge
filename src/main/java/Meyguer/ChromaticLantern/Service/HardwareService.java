@@ -2,7 +2,9 @@ package Meyguer.ChromaticLantern.Service;
 
 import Meyguer.ChromaticLantern.Exceptions.*;
 import Meyguer.ChromaticLantern.Model.*;
-import Meyguer.ChromaticLantern.Model.DTO.HardwareDTO;
+import Meyguer.ChromaticLantern.Model.DTO.KeyboardDTO;
+import Meyguer.ChromaticLantern.Model.DTO.MonitorDTO;
+import Meyguer.ChromaticLantern.Model.DTO.MouseDTO;
 import Meyguer.ChromaticLantern.Repository.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,72 +23,71 @@ public class HardwareService {
     HardwareRepository hardwareRepository;
     @Autowired
     ConsumerService consumerService;
-    public HardwareDTO getDetails(String modelName, Boolean flag) throws ModelNotFoundException, IOException {
-        Optional<HardwareEntity> h = hardwareEntityRepository.findType(modelName);
-        if(h.isPresent()){
-            switch(h.get().getType()){
-                case "monitor":{
-                    Optional<Monitor> ha = hardwareRepository.findMonitorData(h.get().getProdId());
-                    if(ha.isPresent()){
-                        HardwareDTO hDTO = new HardwareDTO();
-                        hDTO.setId(ha.get().getId());
-                        hDTO.setModelName(ha.get().getModelName());
-                        hDTO.setBrand(ha.get().getBrand());
-                        hDTO.setImported(ha.get().getIsImported());
-                        hDTO.setStock(ha.get().getStock());
-                        hDTO.setWeight(ha.get().getWeight());
-                        if(ha.get().getIsImported() && flag){
-                            hDTO.setPrice(ha.get().getPrice()*consumerService.requested());
-                        }else{
-                            hDTO.setPrice(ha.get().getPrice());
-                        }
-                        hDTO.setInches(ha.get().getInches());
-                        hDTO.setPanelType(ha.get().getPanelType());
-                        return hDTO;
-                    }
+    public Optional<HardwareEntity> getIndex(String modelName){
+        return hardwareEntityRepository.findType(modelName);
+    }
+    public KeyboardDTO keyboardDetails(@NotNull Optional<HardwareEntity> he, Boolean flag) throws ModelNotFoundException, IOException {
+        if(he.isPresent()){
+            Optional<Keyboard> ha = hardwareRepository.findKeyboardData(he.get().getProdId());
+            if(ha.isPresent()){
+                KeyboardDTO kDTO = new KeyboardDTO();
+                kDTO.setModelName(ha.get().getModelName());
+                kDTO.setBrand(ha.get().getBrand());
+                kDTO.setImported(ha.get().getIsImported());
+                kDTO.setStock(ha.get().getStock());
+                kDTO.setWeight(ha.get().getWeight());
+                if(ha.get().getIsImported() && flag){
+                    kDTO.setPrice(ha.get().getPrice()*consumerService.requested());
+                }else{
+                    kDTO.setPrice(ha.get().getPrice());
                 }
-                case "mouse":{
-                    Optional<Mouse> ha = hardwareRepository.findMouseData(h.get().getProdId());
-                    if(ha.isPresent()){
-                        HardwareDTO hDTO = new HardwareDTO();
-                        hDTO.setId(ha.get().getId());
-                        hDTO.setModelName(ha.get().getModelName());
-                        hDTO.setBrand(ha.get().getBrand());
-                        hDTO.setImported(ha.get().getIsImported());
-                        hDTO.setStock(ha.get().getStock());
-                        hDTO.setWeight(ha.get().getWeight());
-                        if(ha.get().getIsImported() && flag){
-                            hDTO.setPrice(ha.get().getPrice()*consumerService.requested());
-                        }else{
-                            hDTO.setPrice(ha.get().getPrice());
-                        }
-                        hDTO.setDpi(ha.get().getDpi());
-                        hDTO.setButtonQuantity(ha.get().getButtonQuantity());
-                        return hDTO;
-                    }
+                kDTO.setKeyQuantity(ha.get().getKeyQuantity());
+                kDTO.setMechanical(ha.get().getIsMechanical());
+                return kDTO;
+            }
+        }
+        throw new ModelNotFoundException();
+    }
+    public MouseDTO mouseDetails(@NotNull Optional<HardwareEntity> he, Boolean flag) throws ModelNotFoundException, IOException {
+        if(he.isPresent()){
+            Optional<Mouse> ha = hardwareRepository.findMouseData(he.get().getProdId());
+            if(ha.isPresent()){
+                MouseDTO msDTO = new MouseDTO();
+                msDTO.setModelName(ha.get().getModelName());
+                msDTO.setBrand(ha.get().getBrand());
+                msDTO.setImported(ha.get().getIsImported());
+                msDTO.setStock(ha.get().getStock());
+                msDTO.setWeight(ha.get().getWeight());
+                if(ha.get().getIsImported() && flag){
+                    msDTO.setPrice(ha.get().getPrice()*consumerService.requested());
+                }else{
+                    msDTO.setPrice(ha.get().getPrice());
                 }
-                case "keyboard":{
-                    Optional<Keyboard> ha = hardwareRepository.findKeyboardData(h.get().getProdId());
-                    if(ha.isPresent()){
-                        HardwareDTO hDTO = new HardwareDTO();
-                        hDTO.setId(ha.get().getId());
-                        hDTO.setModelName(ha.get().getModelName());
-                        hDTO.setBrand(ha.get().getBrand());
-                        hDTO.setImported(ha.get().getIsImported());
-                        hDTO.setStock(ha.get().getStock());
-                        hDTO.setWeight(ha.get().getWeight());
-                        if(ha.get().getIsImported() && flag){
-                            hDTO.setPrice(ha.get().getPrice()*consumerService.requested());
-                        }else{
-                            hDTO.setPrice(ha.get().getPrice());
-                        }
-                        hDTO.setKeyQuantity(ha.get().getKeyQuantity());
-                        hDTO.setMechanical(ha.get().getIsMechanical());
-                        return hDTO;
-                    }
+                msDTO.setDpi(ha.get().getDpi());
+                msDTO.setButtonQuantity(ha.get().getButtonQuantity());
+                return msDTO;
+            }
+        }
+        throw new ModelNotFoundException();
+    }
+    public MonitorDTO monitorDetails(@NotNull Optional<HardwareEntity> he, Boolean flag) throws ModelNotFoundException, IOException {
+        if(he.isPresent()){
+            Optional<Monitor> ha = hardwareRepository.findMonitorData(he.get().getProdId());
+            if(ha.isPresent()){
+                MonitorDTO mDTO = new MonitorDTO();
+                mDTO.setModelName(ha.get().getModelName());
+                mDTO.setBrand(ha.get().getBrand());
+                mDTO.setImported(ha.get().getIsImported());
+                mDTO.setStock(ha.get().getStock());
+                mDTO.setWeight(ha.get().getWeight());
+                if(ha.get().getIsImported() && flag){
+                    mDTO.setPrice(ha.get().getPrice()*consumerService.requested());
+                }else{
+                    mDTO.setPrice(ha.get().getPrice());
                 }
-                default:
-                    return new HardwareDTO();
+                mDTO.setInches(ha.get().getInches());
+                mDTO.setPanelType(ha.get().getPanelType());
+                return mDTO;
             }
         }
         throw new ModelNotFoundException();
